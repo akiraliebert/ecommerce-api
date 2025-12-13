@@ -4,3 +4,6 @@ sqlalchemy
 psycopg[binary]
 python-dotenv
 redis
+alembic
+pydantic_settings
+asyncpg
