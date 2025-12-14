@@ -7,3 +7,6 @@ redis
 alembic
 pydantic_settings
 asyncpg
+pytest
+pytest-asyncio
+httpx

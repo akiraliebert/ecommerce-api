@@ -1,4 +1,7 @@
+import os
 from pydantic_settings import BaseSettings
+from typing import Literal
+from pydantic import ConfigDict
 
 
 class Settings(BaseSettings):
@@ -12,12 +15,13 @@ class Settings(BaseSettings):
     redis_host: str
     redis_port: int
 
-    app_env: str
+    app_env: Literal["dev", "test", "prod"]
     app_debug: str
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+    model_config = ConfigDict(
+        env_file=os.getenv("ENV_FILE", ".env"),
+        env_file_encoding="utf-8"
+    )
 
 
 settings = Settings()

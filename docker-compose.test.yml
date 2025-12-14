@@ -1,0 +1,49 @@
+services:
+  test_app:
+    build: .
+    container_name: ecommerce_app_test
+    depends_on:
+      - test_db
+      - migrations
+      - test_redis
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env.test
+    volumes:
+      - .:/app
+    environment:
+      ENV_FILE: .env.test
+      PYTHONPATH: /app
+    command: pytest -v
+
+  test_db:
+    image: postgres:15
+    container_name: ecommerce_test_db
+    env_file:
+      - .env.test
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - test_postgres_data:/var/lib/postgresql/data
+
+  migrations:
+    build: .
+    container_name: ecommerce_test_migrations
+    env_file:
+      - .env.test
+    depends_on:
+      - test_db
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: alembic upgrade head
+
+  test_redis:
+    image: redis:7
+    container_name: ecommerce_test_redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  test_postgres_data:

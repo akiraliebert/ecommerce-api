@@ -30,6 +30,12 @@ class Product:
 
     @staticmethod
     def create(name: str, price: Decimal, quantity: int, description: Optional[str] = None) -> "Product":
+        if price <= Decimal("0"):
+            raise ValueError("Price must be positive")
+
+        if quantity < 0:
+            raise ValueError("Quantity cannot be negative")
+
         return Product(
             id=uuid4(),
             name=name,
