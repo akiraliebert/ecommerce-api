@@ -1,3 +1,5 @@
+name: ecommerce_api_dev
+
 services:
   app:
     build: .
