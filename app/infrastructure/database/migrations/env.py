@@ -5,7 +5,8 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 
-from app.infrastructure.database.models.product_model import Base  # Наш базовый класс
+from app.infrastructure.database.models.base import Base  # Наш базовый класс
+from app.infrastructure.database.models import *  # Модели
 from app.config.settings import settings  # Настройки проекта
 
 
