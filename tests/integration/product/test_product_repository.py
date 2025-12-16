@@ -5,7 +5,7 @@ from app.domain.entities.product import Product
 
 
 @pytest.mark.asyncio
-async def test_create_and_get_product(uow):
+async def test_create_and_get_product(uow, products):
     async with uow:
         product = Product.create(
             name="Integration test",
@@ -13,10 +13,10 @@ async def test_create_and_get_product(uow):
             quantity=3,
             description="Test",
         )
-        created = await uow.products.create(product)
+        created = await products.create(product)
 
     async with uow:
-        fetched = await uow.products.get_by_id(created.id)
+        fetched = await products.get_by_id(created.id)
 
         assert fetched is not None
         assert fetched.name == "Integration test"
@@ -24,17 +24,17 @@ async def test_create_and_get_product(uow):
 
 
 @pytest.mark.asyncio
-async def test_list_products(uow):
+async def test_list_products(uow, products):
     async with uow:
-        await uow.products.create(
+        await products.create(
             Product.create(name="P1", price=Decimal("10"), quantity=1)
         )
-        await uow.products.create(
+        await products.create(
             Product.create(name="P2", price=Decimal("20"), quantity=2)
         )
 
     async with uow:
-        products = await uow.products.list()
+        products = await products.list()
         names = [p.name for p in products]
 
         assert "P1" in names
@@ -42,40 +42,40 @@ async def test_list_products(uow):
 
 
 @pytest.mark.asyncio
-async def test_update_product(uow):
+async def test_update_product(uow, products):
     async with uow:
-        product = await uow.products.create(
+        product = await products.create(
             Product.create(name="Old", price=Decimal("10"), quantity=1)
         )
 
     async with uow:
         product.price = Decimal("99")
-        await uow.products.update(product)
+        await products.update(product)
 
     async with uow:
-        updated = await uow.products.get_by_id(product.id)
+        updated = await products.get_by_id(product.id)
         assert updated.price == Decimal("99")
 
 
 @pytest.mark.asyncio
-async def test_delete_product(uow):
+async def test_delete_product(uow, products):
     async with uow:
-        product = await uow.products.create(
+        product = await products.create(
             Product.create(name="To delete", price=Decimal("5"), quantity=1)
         )
 
     async with uow:
-        await uow.products.delete(product.id)
+        await products.delete(product.id)
 
     async with uow:
-        result = await uow.products.get_by_id(product.id)
+        result = await products.get_by_id(product.id)
         assert result is None
 
 @pytest.mark.asyncio
-async def test_transaction_rollback(uow):
+async def test_transaction_rollback(uow, products):
     try:
         async with uow:
-            await uow.products.create(
+            await products.create(
                 Product.create(name="Rollback", price=Decimal("10"), quantity=1)
             )
             raise RuntimeError("Boom")
@@ -83,7 +83,7 @@ async def test_transaction_rollback(uow):
         pass
 
     async with uow:
-        products = await uow.products.list()
+        products = await products.list()
         names = [p.name for p in products]
 
         assert "Rollback" not in names

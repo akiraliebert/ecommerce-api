@@ -11,14 +11,15 @@ from app.domain.entities.product import Product
 async def test_create_product_use_case_success():
     mock_uow = AsyncMock()
     mock_uow.__aenter__.return_value = mock_uow
-    mock_uow.products.create.return_value = Product.create(
+    mock_repo = AsyncMock()
+    mock_repo.create.return_value = Product.create(
         name="Test",
         description="Test",
         price=Decimal("10"),
         quantity=5,
     )
 
-    uc = CreateProductUseCase(mock_uow)
+    uc = CreateProductUseCase(mock_uow, mock_repo)
 
     result = await uc.execute(
         CreateProductDTO(
@@ -30,4 +31,4 @@ async def test_create_product_use_case_success():
     )
 
     assert result.name == "Test"
-    mock_uow.products.create.assert_called_once()
+    mock_repo.create.assert_called_once()

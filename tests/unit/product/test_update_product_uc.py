@@ -22,10 +22,11 @@ async def test_update_product_success():
 
     mock_uow = AsyncMock()
     mock_uow.__aenter__.return_value = mock_uow
-    mock_uow.products.get_by_id.return_value = existing_product
-    mock_uow.products.update.return_value = existing_product
+    mock_repo = AsyncMock()
+    mock_repo.get_by_id.return_value = existing_product
+    mock_repo.update.return_value = existing_product
 
-    uc = UpdateProductUseCase(mock_uow)
+    uc = UpdateProductUseCase(mock_uow, mock_repo)
 
     result = await uc.execute(
         product_id,
@@ -38,16 +39,17 @@ async def test_update_product_success():
     assert result.name == "New name"
     assert result.price == Decimal("20")
 
-    mock_uow.products.get_by_id.assert_called_once_with(product_id)
-    mock_uow.products.update.assert_called_once()
+    mock_repo.get_by_id.assert_called_once_with(product_id)
+    mock_repo.update.assert_called_once()
 
 @pytest.mark.asyncio
 async def test_update_product_not_found():
     mock_uow = AsyncMock()
     mock_uow.__aenter__.return_value = mock_uow
-    mock_uow.products.get_by_id.return_value = None
+    mock_repo = AsyncMock()
+    mock_repo.get_by_id.return_value = None
 
-    uc = UpdateProductUseCase(mock_uow)
+    uc = UpdateProductUseCase(mock_uow, mock_repo)
 
     with pytest.raises(ValueError, match="Product not found"):
         await uc.execute(
@@ -55,12 +57,13 @@ async def test_update_product_not_found():
             UpdateProductDTO(name="New"),
         )
 
-    mock_uow.products.update.assert_not_called()
+    mock_repo.update.assert_not_called()
 
 @pytest.mark.asyncio
 async def test_update_product_no_fields_provided():
     mock_uow = AsyncMock()
-    uc = UpdateProductUseCase(mock_uow)
+    mock_repo = AsyncMock()
+    uc = UpdateProductUseCase(mock_uow, mock_repo)
 
     with pytest.raises(ValueError, match="No fields provided for update"):
         await uc.execute(

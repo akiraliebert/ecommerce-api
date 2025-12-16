@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 
 from app.infrastructure.database.uow.sqlalchemy_uow import SqlAlchemyUnitOfWork
+from app.infrastructure.database.repositories.product_repository_impl import ProductRepositoryImpl
 from app.config.settings import settings
 
 
@@ -20,5 +21,7 @@ async def db_session():
 async def uow(db_session):
     return SqlAlchemyUnitOfWork(db_session)
 
-
+@pytest_asyncio.fixture
+async def products(db_session):
+    return ProductRepositoryImpl(db_session)
 
