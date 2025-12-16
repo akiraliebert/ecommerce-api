@@ -2,11 +2,13 @@ from uuid import UUID
 
 from app.domain.uow.unit_of_work import UnitOfWork
 from app.application.dto.product_dto import UpdateProductDTO, ProductDTO
+from app.domain.repositories.product_repository import ProductRepository
 
 
 class UpdateProductUseCase:
-    def __init__(self, uow: UnitOfWork):
+    def __init__(self, uow: UnitOfWork, product_repo: ProductRepository):
         self.uow = uow
+        self.products = product_repo
 
     async def execute(self, product_id: UUID, data: UpdateProductDTO) -> ProductDTO:
         if not any([
@@ -18,7 +20,7 @@ class UpdateProductUseCase:
             raise ValueError("No fields provided for update")
 
         async with self.uow:
-            product = await self.uow.products.get_by_id(product_id)
+            product = await self.products.get_by_id(product_id)
             if not product:
                 raise ValueError("Product not found")
 
@@ -35,7 +37,7 @@ class UpdateProductUseCase:
             if data.quantity is not None:
                 product.quantity = data.quantity
 
-            updated = await self.uow.products.update(product)
+            updated = await self.products.update(product)
 
             return ProductDTO(
                 id=updated.id,

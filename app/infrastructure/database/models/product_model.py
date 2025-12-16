@@ -1,7 +1,6 @@
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import String, Integer, Numeric, Text
 from sqlalchemy.dialects.postgresql import UUID
-from uuid import uuid4
 from decimal import Decimal
 
 from app.infrastructure.database.models.base import Base
@@ -12,8 +11,7 @@ class ProductModel(Base):
 
     id: Mapped[UUID] = mapped_column(
         UUID(as_uuid=True),
-        primary_key=True,
-        default=uuid4,
+        primary_key=True
     )
 
     name: Mapped[str] = mapped_column(

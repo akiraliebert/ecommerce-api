@@ -64,7 +64,6 @@ class ProductRepositoryImpl(ProductRepository):
     async def create(self, product: Product) -> Product:
         model = self._to_model(product)
         self.session.add(model)
-        await self.session.flush()  # Получаем id (если нужно)
         return self._to_entity(model)
 
     async def update(self, product: Product) -> Product:
@@ -88,6 +87,3 @@ class ProductRepositoryImpl(ProductRepository):
 
         await self.session.delete(model)
         await self.session.flush()
-
-
-    

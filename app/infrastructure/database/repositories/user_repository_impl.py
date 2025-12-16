@@ -43,6 +43,7 @@ class UserRepositoryImpl(UserRepository):
         stmt = select(UserModel).where(UserModel.id == user_id)
         result = await self.session.execute(stmt)
         model = result.scalar_one_or_none()
+
         if model:
             return self._to_entity(model)
         return None
@@ -52,6 +53,7 @@ class UserRepositoryImpl(UserRepository):
         stmt = select(UserModel).where(UserModel.email == email)
         result = await self.session.execute(stmt)
         model = result.scalar_one_or_none()
+
         if model:
             return self._to_entity(model)
         return None

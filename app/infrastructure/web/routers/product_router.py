@@ -7,7 +7,7 @@ from app.infrastructure.web.schemas.product_schema import (
     ProductUpdateSchema
 )
 
-from app.infrastructure.web.dependencies import (
+from app.infrastructure.web.dependencies.product import (
     get_create_product_uc,
     get_get_product_uc,
     get_list_products_uc,

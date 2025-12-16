@@ -1,11 +1,13 @@
 from app.domain.uow.unit_of_work import UnitOfWork
 from app.domain.entities.product import Product
 from app.application.dto.product_dto import CreateProductDTO, ProductDTO
+from app.domain.repositories.product_repository import ProductRepository
 
 
 class CreateProductUseCase:
-    def __init__(self, uow: UnitOfWork):
+    def __init__(self, uow: UnitOfWork, product_repo: ProductRepository):
         self.uow = uow
+        self.products = product_repo
 
     async def execute(self, data: CreateProductDTO) -> ProductDTO:
         async with self.uow:
@@ -17,7 +19,7 @@ class CreateProductUseCase:
                 quantity=data.quantity
             )
 
-            created = await self.uow.products.create(product)
+            created = await self.products.create(product)
 
             return ProductDTO(
                 id=created.id,

@@ -12,8 +12,7 @@ class UserModel(Base):
 
     id: Mapped[UUID] = mapped_column(
         UUID(as_uuid=True),
-        primary_key=True,
-        default=uuid4,
+        primary_key=True
     )
 
     email: Mapped[str] = mapped_column(
