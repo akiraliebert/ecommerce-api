@@ -17,21 +17,21 @@ def get_product_repository(session=Depends(get_db_session)) -> ProductRepository
     return ProductRepositoryImpl(session)
 
 
-async def get_create_product_uc(uow=Depends(get_uow), repo=Depends(get_product_repository)):
+def get_create_product_uc(uow=Depends(get_uow), repo=Depends(get_product_repository)):
     return CreateProductUseCase(uow, repo)
 
 
-async def get_get_product_uc(uow=Depends(get_uow), repo=Depends(get_product_repository)):
+def get_get_product_uc(uow=Depends(get_uow), repo=Depends(get_product_repository)):
     return GetProductUseCase(uow, repo)
 
 
-async def get_list_products_uc(uow=Depends(get_uow), repo=Depends(get_product_repository)):
+def get_list_products_uc(uow=Depends(get_uow), repo=Depends(get_product_repository)):
     return ListProductsUseCase(uow, repo)
 
 
-async def get_update_product_uc(uow=Depends(get_uow), repo=Depends(get_product_repository)):
+def get_update_product_uc(uow=Depends(get_uow), repo=Depends(get_product_repository)):
     return UpdateProductUseCase(uow, repo)
 
 
-async def get_delete_product_uc(uow=Depends(get_uow), repo=Depends(get_product_repository)):
+def get_delete_product_uc(uow=Depends(get_uow), repo=Depends(get_product_repository)):
     return DeleteProductUseCase(uow, repo)

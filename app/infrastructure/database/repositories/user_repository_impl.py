@@ -39,6 +39,7 @@ class UserRepositoryImpl(UserRepository):
             created_at=entity.created_at
         )
 
+
     async def get_by_id(self, user_id: UUID) -> Optional[User]:
         stmt = select(UserModel).where(UserModel.id == user_id)
         result = await self.session.execute(stmt)

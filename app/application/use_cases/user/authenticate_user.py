@@ -6,17 +6,17 @@ from app.domain.uow.unit_of_work import UnitOfWork
 class AuthenticateUserUseCase:
     def __init__(
         self,
-        user_repository: UserRepository,
-        password_hasher: PasswordHasher,
         uow: UnitOfWork,
+        user_repo: UserRepository,
+        password_hasher: PasswordHasher,
     ):
-        self.user_repository = user_repository
-        self.password_hasher = password_hasher
         self.uow = uow
+        self.users = user_repo
+        self.password_hasher = password_hasher
 
     async def execute(self, email: str, password: str):
         async with self.uow:
-            user = await self.user_repository.get_by_email(email)
+            user = await self.users.get_by_email(email)
 
             if not user:
                 raise ValueError("Invalid credentials")

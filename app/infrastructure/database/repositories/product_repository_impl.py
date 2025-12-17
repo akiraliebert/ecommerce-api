@@ -64,7 +64,7 @@ class ProductRepositoryImpl(ProductRepository):
     async def create(self, product: Product) -> Product:
         model = self._to_model(product)
         self.session.add(model)
-        return self._to_entity(model)
+        return product
 
     async def update(self, product: Product) -> Product:
         """Обновляет существующую запись"""

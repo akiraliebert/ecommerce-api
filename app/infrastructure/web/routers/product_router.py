@@ -14,11 +14,16 @@ from app.infrastructure.web.dependencies.product import (
     get_update_product_uc,
     get_delete_product_uc
 )
+from app.domain.entities.user import User
+from app.infrastructure.web.dependencies.user import get_current_user
+
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
+
 @router.post("/", response_model=ProductResponseSchema)
-async def create_product(data: ProductCreateSchema, use_case=Depends(get_create_product_uc)):
+async def create_product(data: ProductCreateSchema, use_case=Depends(get_create_product_uc),
+                         current_user: User = Depends(get_current_user)):
     return await use_case.execute(data)
 
 
@@ -42,11 +47,13 @@ async def get_product(
             detail="Product not found"
         )
 
+
 @router.put("/{product_id}", response_model=ProductResponseSchema)
 async def update_product(
     product_id: UUID,
     data: ProductUpdateSchema,
     use_case=Depends(get_update_product_uc),
+    current_user: User = Depends(get_current_user)
 ):
     try:
         return await use_case.execute(product_id, data)
@@ -62,6 +69,7 @@ async def update_product(
 async def delete_product(
     product_id: UUID,
     use_case=Depends(get_delete_product_uc),
+    current_user: User = Depends(get_current_user)
 ):
     try:
         await use_case.execute(product_id)
@@ -70,6 +78,3 @@ async def delete_product(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Product not found"
         )
-
-
-

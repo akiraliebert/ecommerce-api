@@ -8,17 +8,17 @@ from app.domain.uow.unit_of_work import UnitOfWork
 class RegisterUserUseCase:
     def __init__(
         self,
-        user_repository: UserRepository,
-        password_hasher: PasswordHasher,
         uow: UnitOfWork,
+        user_repo: UserRepository,
+        password_hasher: PasswordHasher,
     ):
-        self.user_repository = user_repository
-        self.password_hasher = password_hasher
         self.uow = uow
+        self.users = user_repo
+        self.password_hasher = password_hasher
 
     async def execute(self, data: CreateUserDTO) -> UserDTO:
         async with self.uow:
-            existing_user = await self.user_repository.get_by_email(data.email)
+            existing_user = await self.users.get_by_email(data.email)
             if existing_user:
                 raise ValueError("User with this email already exists")
 
@@ -29,7 +29,7 @@ class RegisterUserUseCase:
                 hashed_password=hashed_password,
             )
 
-            await self.user_repository.create(user)
+            await self.users.create(user)
 
             return UserDTO(
                 id=user.id,

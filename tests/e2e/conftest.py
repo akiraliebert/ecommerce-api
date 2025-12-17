@@ -15,7 +15,6 @@ async def db_session():
     async_session_maker = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
     async with async_session_maker() as session:
         yield session
-        await session.rollback()
     await engine.dispose()
 
 
@@ -32,3 +31,30 @@ async def client(db_session):
         yield client
 
     app.dependency_overrides.clear()
+
+
+@pytest_asyncio.fixture
+async def auth_headers(client):
+    # register
+    await client.post(
+        "/auth/register",
+        json={
+            "email": "test@gmail.com",
+            "password": "password123"
+        }
+    )
+
+    # login
+    response = await client.post(
+        "/auth/login",
+        json={
+            "email": "test@gmail.com",
+            "password": "password123"
+        }
+    )
+
+    token = response.json()["access_token"]
+
+    return {
+        "Authorization": f"Bearer {token}"
+    }
