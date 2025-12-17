@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from app.infrastructure.database.uow.sqlalchemy_uow import SqlAlchemyUnitOfWork
 from app.infrastructure.database.repositories.product_repository_impl import ProductRepositoryImpl
 from app.infrastructure.database.repositories.user_repository_impl import UserRepositoryImpl
+from app.infrastructure.database.repositories.cart_repository_impl import CartRepositoryImpl
 from app.config.settings import settings
 
 
@@ -31,3 +32,8 @@ async def products(db_session):
 @pytest_asyncio.fixture
 async def users(db_session):
     return UserRepositoryImpl(db_session)
+
+
+@pytest_asyncio.fixture
+async def carts(db_session):
+    return CartRepositoryImpl(db_session)
