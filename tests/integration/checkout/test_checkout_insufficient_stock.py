@@ -13,7 +13,7 @@ from app.domain.entities.product import Product
 async def test_checkout_insufficient_stock(uow, db_session, products, carts, inventory):
     user_id = uuid4()
 
-    # имитируем реальную ситуацию на проде, иначе в тестах все идет в рамках одного db_sesion
+    # имитируем реальную ситуацию на проде, иначе в тестах весь setup идет в рамках одного db_session
     # что означает ValueError == rollback и созданный продукт откатывается. Поэтому делаем async with db_session.begin()
     async with db_session.begin():
         product = Product.create(
