@@ -4,9 +4,14 @@ from app.domain.repositories.product_repository import ProductRepository
 from app.domain.repositories.inventory_repository import InventoryRepository
 from app.domain.repositories.order_repository import OrderRepository
 
-from app.domain.entities.order import Order, OrderItem
 from app.domain.entities.inventory import InventoryReservation
-from app.application.dto.order_dto import PlaceOrderDTO, OrderDTO, OrderItemDTO
+from app.domain.entities.order import Order, OrderItem
+
+from app.application.dto.order_dto import (
+    PlaceOrderDTO,
+    OrderDTO,
+    OrderItemDTO,
+)
 
 
 class PlaceOrderService:
@@ -24,7 +29,6 @@ class PlaceOrderService:
         self.inventory = inventory_repo
         self.orders = order_repo
 
-
     async def execute(self, data: PlaceOrderDTO) -> OrderDTO:
         async with self.uow:
             cart = await self.carts.get_by_user_id(data.user_id)
@@ -33,7 +37,6 @@ class PlaceOrderService:
                 raise ValueError("Cart is empty")
 
             order_items: list[OrderItem] = []
-            reservations: list[InventoryReservation] = []
 
             for item in cart.items:
                 product = await self.products.get_by_id(item.product_id)
@@ -41,16 +44,14 @@ class PlaceOrderService:
                 if not product:
                     raise ValueError("Product not found")
 
-                if product.quantity < item.quantity:
-                    raise ValueError("Not enough product in stock")
+                product.reserve(item.quantity)
+                await self.products.update(product)
 
                 reservation = InventoryReservation.create(
                     product_id=product.id,
-                    quantity=item.quantity
+                    quantity=item.quantity,
                 )
-
                 await self.inventory.create(reservation)
-                reservations.append(reservation)
 
                 order_items.append(
                     OrderItem(
@@ -62,7 +63,7 @@ class PlaceOrderService:
 
             order = Order.create(
                 user_id=data.user_id,
-                items=order_items
+                items=order_items,
             )
 
             await self.orders.create(order)
@@ -83,5 +84,5 @@ class PlaceOrderService:
                         price=i.price,
                     )
                     for i in order.items
-                ]
+                ],
             )

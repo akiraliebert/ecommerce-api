@@ -60,6 +60,8 @@ class CreateOrderUseCase:
             return OrderDTO(
                 id=order.id,
                 user_id=order.user_id,
+                status=order.status,
+                created_at=order.created_at,
                 items=[
                     OrderItemDTO(
                         product_id=i.product_id,
@@ -69,4 +71,5 @@ class CreateOrderUseCase:
                     for i in order.items
                 ],
                 total=order.total_amount()
+
             )

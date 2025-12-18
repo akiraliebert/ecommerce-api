@@ -2,6 +2,9 @@ from dataclasses import dataclass
 from uuid import UUID
 from decimal import Decimal
 from typing import List
+from datetime import datetime
+
+from app.domain.entities.order import OrderStatus
 
 
 @dataclass
@@ -22,6 +25,9 @@ class OrderDTO:
     user_id: UUID
     items: List[OrderItemDTO]
     total: Decimal
+    status: OrderStatus
+    created_at: datetime
+
 
 
 @dataclass(frozen=True)
