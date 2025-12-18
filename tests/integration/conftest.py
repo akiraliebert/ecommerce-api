@@ -6,6 +6,7 @@ from app.infrastructure.database.uow.sqlalchemy_uow import SqlAlchemyUnitOfWork
 from app.infrastructure.database.repositories.product_repository_impl import ProductRepositoryImpl
 from app.infrastructure.database.repositories.user_repository_impl import UserRepositoryImpl
 from app.infrastructure.database.repositories.cart_repository_impl import CartRepositoryImpl
+from app.infrastructure.database.repositories.inventory_repository_impl import InventoryRepositoryImpl
 from app.config.settings import settings
 
 
@@ -15,7 +16,6 @@ async def db_session():
     async_session_maker = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
     async with async_session_maker() as session:
         yield session
-        await session.rollback()
     await engine.dispose()
 
 
@@ -37,3 +37,8 @@ async def users(db_session):
 @pytest_asyncio.fixture
 async def carts(db_session):
     return CartRepositoryImpl(db_session)
+
+
+@pytest_asyncio.fixture
+async def inventory(db_session):
+    return InventoryRepositoryImpl(db_session)

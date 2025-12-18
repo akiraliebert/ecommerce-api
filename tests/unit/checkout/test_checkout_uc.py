@@ -5,7 +5,7 @@ from decimal import Decimal
 
 from app.application.use_cases.checkout.checkout import CheckoutUseCase
 from app.application.dto.checkout_dto import CheckoutDTO
-from app.domain.entities.cart import Cart, CartItem
+from app.domain.entities.cart import Cart
 from app.domain.entities.product import Product
 from app.domain.entities.inventory import InventoryReservation
 
