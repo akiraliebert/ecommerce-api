@@ -7,6 +7,7 @@ from app.infrastructure.database.repositories.product_repository_impl import Pro
 from app.infrastructure.database.repositories.user_repository_impl import UserRepositoryImpl
 from app.infrastructure.database.repositories.cart_repository_impl import CartRepositoryImpl
 from app.infrastructure.database.repositories.inventory_repository_impl import InventoryRepositoryImpl
+from app.infrastructure.database.repositories.order_repository_impl import OrderRepositoryImpl
 from app.config.settings import settings
 
 
@@ -42,3 +43,7 @@ async def carts(db_session):
 @pytest_asyncio.fixture
 async def inventory(db_session):
     return InventoryRepositoryImpl(db_session)
+
+@pytest_asyncio.fixture
+async def orders(db_session):
+    return OrderRepositoryImpl(db_session)

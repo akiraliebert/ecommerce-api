@@ -50,9 +50,6 @@ class OrderRepositoryImpl(OrderRepository):
         return order_model
 
 
-    async def create(self, order: Order) -> None:
-        self.session.add(self._to_model(order))
-
     async def get_by_id(self, order_id):
         stmt = (
             select(OrderModel)
@@ -65,3 +62,38 @@ class OrderRepositoryImpl(OrderRepository):
             return None
 
         return self._to_domain(model)
+
+    async def get_by_user_id(self, user_id):
+        stmt = (
+            select(OrderModel)
+            .where(OrderModel.user_id == user_id)
+        )
+        result = await self.session.execute(stmt)
+        models = result.scalars().all()
+
+        return [self._to_domain(model) for model in models]
+
+    async def create(self, order: Order) -> None:
+        self.session.add(self._to_model(order))
+
+    async def update(self, order: Order) -> None:
+        stmt = select(OrderModel).where(OrderModel.id == order.id)
+        result = await self.session.execute(stmt)
+        model = result.scalar_one_or_none()
+
+        if not model:
+            raise ValueError("Order not found")
+
+        model.status = order.status.value
+        model.created_at = order.created_at  # обычно не меняется, но для консистентности
+
+        # обновляем items (упрощённый, но корректный вариант)
+        model.items.clear()
+        model.items.extend([
+            OrderItemModel(
+                product_id=item.product_id,
+                quantity=item.quantity,
+                price=item.price,
+            )
+            for item in order.items
+        ])

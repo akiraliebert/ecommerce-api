@@ -1,3 +1,4 @@
+from sqlalchemy import DateTime
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from uuid import UUID
 from datetime import datetime
@@ -18,5 +19,8 @@ class OrderModel(Base):
     )
 
     status: Mapped[str]
-    created_at: Mapped[datetime]
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+    )
 
