@@ -42,7 +42,7 @@ class CheckoutUseCase:
                     quantity=item.quantity
                 )
 
-                reservation = self.inventory.create(inventory_reservation)
+                reservation = await self.inventory.create(inventory_reservation)
 
                 reservations.append(reservation)
                 await self.products.update(product)
