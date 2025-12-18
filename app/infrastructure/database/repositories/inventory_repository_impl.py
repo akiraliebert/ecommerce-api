@@ -12,6 +12,7 @@ class InventoryRepositoryImpl(InventoryRepository):
     def __init__(self, session):
         self.session = session
 
+
     # -------------------------
     # MAPPERS
     # -------------------------
@@ -31,6 +32,7 @@ class InventoryRepositoryImpl(InventoryRepository):
             quantity=reservation.quantity,
             is_active=reservation.is_active,
         )
+
 
     async def get_by_id(self, reservation_id: UUID) -> Optional[InventoryReservation]:
         result = await self.session.execute(
@@ -58,9 +60,10 @@ class InventoryRepositoryImpl(InventoryRepository):
 
         return [self._to_domain(m) for m in result.scalars().all()]
 
-    async def create(self, reservation: InventoryReservation) -> None:
+    async def create(self, reservation: InventoryReservation) -> InventoryReservation:
         model = self._to_model(reservation)
         self.session.add(model)
+        return reservation
 
     async def update(self, reservation: InventoryReservation) -> None:
         result = await self.session.execute(
