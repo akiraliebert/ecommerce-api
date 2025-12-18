@@ -59,7 +59,6 @@ class UserRepositoryImpl(UserRepository):
             return self._to_entity(model)
         return None
 
-    async def create(self, user: User) -> User:
+    async def create(self, user: User) -> None:
         model = self._to_model(user)
         self.session.add(model)
-        return user

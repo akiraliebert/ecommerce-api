@@ -20,7 +20,7 @@ class InventoryRepository(ABC):
         pass
 
     @abstractmethod
-    async def create(self, reservation: InventoryReservation) -> InventoryReservation:
+    async def create(self, reservation: InventoryReservation) -> None:
         pass
 
     @abstractmethod

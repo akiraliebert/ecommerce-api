@@ -37,12 +37,12 @@ class CheckoutUseCase:
                 # доменная логика
                 product.reserve(item.quantity)
 
-                inventory_reservation = InventoryReservation.create(
+                reservation = InventoryReservation.create(
                     product_id=product.id,
                     quantity=item.quantity
                 )
 
-                reservation = await self.inventory.create(inventory_reservation)
+                await self.inventory.create(reservation)
 
                 reservations.append(reservation)
                 await self.products.update(product)

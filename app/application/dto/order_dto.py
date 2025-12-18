@@ -22,3 +22,8 @@ class OrderDTO:
     user_id: UUID
     items: List[OrderItemDTO]
     total: Decimal
+
+
+@dataclass(frozen=True)
+class PlaceOrderDTO:
+    user_id: UUID

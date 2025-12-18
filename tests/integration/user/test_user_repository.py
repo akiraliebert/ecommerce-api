@@ -6,11 +6,11 @@ from app.domain.entities.user import User
 @pytest.mark.asyncio
 async def test_create_and_get_user(uow, users):
     async with uow:
-        product = User.create(
+        created = User.create(
             email="test_repo@gmail.com",
             hashed_password='dsf3kjfwijwofjs21'
         )
-        created = await users.create(product)
+        await users.create(created)
 
     async with uow:
         fetched = await users.get_by_id(created.id)

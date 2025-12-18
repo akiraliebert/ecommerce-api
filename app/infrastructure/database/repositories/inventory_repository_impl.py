@@ -60,10 +60,9 @@ class InventoryRepositoryImpl(InventoryRepository):
 
         return [self._to_domain(m) for m in result.scalars().all()]
 
-    async def create(self, reservation: InventoryReservation) -> InventoryReservation:
+    async def create(self, reservation: InventoryReservation) -> None:
         model = self._to_model(reservation)
         self.session.add(model)
-        return reservation
 
     async def update(self, reservation: InventoryReservation) -> None:
         result = await self.session.execute(
