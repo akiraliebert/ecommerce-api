@@ -47,7 +47,7 @@ async def get_order(
         raise HTTPException(status_code=404, detail=str(e))
 
 
-@router.post("/{order_id}/pay", response_model=OrderResponse)
+@router.post("/{order_id}/pay", response_model=OrderDTO)
 async def pay_order(order_id: UUID, uc=Depends(get_process_payment_uc)):
     try:
         return await uc.execute(order_id)

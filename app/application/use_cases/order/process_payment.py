@@ -1,6 +1,7 @@
 from app.domain.uow.unit_of_work import UnitOfWork
 from app.domain.repositories.order_repository import OrderRepository
 from app.domain.services.payment_service import PaymentService, PaymentResult
+from app.application.dto.order_dto import OrderDTO
 
 
 class ProcessPaymentUseCase:
@@ -32,4 +33,4 @@ class ProcessPaymentUseCase:
 
             await self.orders.update(order)
 
-            return order
+            return OrderDTO.from_domain(order)
