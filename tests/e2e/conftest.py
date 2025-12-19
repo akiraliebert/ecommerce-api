@@ -58,3 +58,22 @@ async def auth_headers(client):
     return {
         "Authorization": f"Bearer {token}"
     }
+
+@pytest_asyncio.fixture
+async def product(client, auth_headers):
+    payload = {
+        "name": "Test Product",
+        "description": "For cart e2e",
+        "price": "10.00",
+        "quantity": 100
+    }
+
+    response = await client.post(
+        "/products/",
+        json=payload,
+        headers=auth_headers
+    )
+
+    assert response.status_code == 200
+    return response.json()
+
