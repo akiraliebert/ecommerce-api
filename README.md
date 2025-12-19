@@ -156,8 +156,8 @@ app/
 
 ### 🔹 1. Клонировать репозиторий
 ```bash
-git clone https://github.com/yourname/ecommerce-backend.git
-cd ecommerce-backend
+git clone https://github.com/akiraliebert/ecommerce-api.git
+cd ecommerce-api
 🔹 2. Создать .env
 
 Смотрите в примере .env.example
