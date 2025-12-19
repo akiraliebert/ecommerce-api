@@ -29,7 +29,7 @@ def get_password_hasher():
 
 
 def get_jwt_service():
-    return JWTService(settings.jwt_secret_key)
+    return JWTService(settings.jwt_secret_access, settings.jwt_secret_refresh)
 
 
 def get_register_user_uc(uow=Depends(get_uow), repo=Depends(get_user_repository),
@@ -58,7 +58,7 @@ async def get_current_user(
     token = credentials.credentials
 
     try:
-        payload = jwt_service.decode_token(token)
+        payload = jwt_service.decode_access_token(token)
     except ValueError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

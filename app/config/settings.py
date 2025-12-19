@@ -12,7 +12,8 @@ class Settings(BaseSettings):
     postgres_password: str
     database_url: str
 
-    jwt_secret_key: str
+    jwt_secret_access: str
+    jwt_secret_refresh: str
 
     redis_host: str
     redis_port: int

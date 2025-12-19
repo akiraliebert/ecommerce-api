@@ -6,8 +6,9 @@ from app.infrastructure.security.jwt_config import JWTConfig
 
 
 class JWTService:
-    def __init__(self, secret_key: str):
-        self.secret_key = secret_key
+    def __init__(self, secret_access: str, secret_refresh: str):
+        self.secret_access = secret_access
+        self.secret_refresh = secret_refresh
 
     def create_access_token(self, user_id: UUID) -> str:
         now = datetime.now(timezone.utc)
@@ -21,7 +22,7 @@ class JWTService:
 
         return jwt.encode(
             payload,
-            self.secret_key,
+            self.secret_access,
             algorithm=JWTConfig.ALGORITHM,
         )
 
@@ -37,15 +38,25 @@ class JWTService:
 
         return jwt.encode(
             payload,
-            self.secret_key,
+            self.secret_refresh,
             algorithm=JWTConfig.ALGORITHM,
         )
 
-    def decode_token(self, token: str) -> dict:
+    def decode_access_token(self, token: str) -> dict:
         try:
             return jwt.decode(
                 token,
-                self.secret_key,
+                self.secret_access,
+                algorithms=[JWTConfig.ALGORITHM],
+            )
+        except JWTError:
+            raise ValueError("Invalid token")
+
+    def decode_refresh_token(self, token: str) -> dict:
+        try:
+            return jwt.decode(
+                token,
+                self.secret_refresh,
                 algorithms=[JWTConfig.ALGORITHM],
             )
         except JWTError:
