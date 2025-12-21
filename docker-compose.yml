@@ -5,7 +5,8 @@ services:
     build: .
     container_name: ecommerce_app
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     ports:
       - "8000:8000"
     env_file:
@@ -16,6 +17,10 @@ services:
 
   db:
     image: postgres:15
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER"]
+      interval: 1s
+      retries: 30
     container_name: ecommerce_db
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
