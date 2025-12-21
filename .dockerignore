@@ -12,7 +12,7 @@ __pycache__/
 .idea/
 
 # env vars
-.env
+.env*
 
 # misc
 *.log
